@@ -98,7 +98,10 @@ class RustBuildCommand(Command):
         # Ask build_ext where the shared library would go if it had built it,
         # then copy it there.
         build_ext = self.get_finalized_command('build_ext')
-        target_fname = os.path.splitext(os.path.basename(dylib_path)[3:])[0]
+        if sys.platform.startswith('linux'):
+	    target_fname = os.path.splitext(os.path.basename(dylib_path))[0]
+	else:
+	    target_fname = os.path.splitext(os.path.basename(dylib_path)[3:])[0]
         ext_path = build_ext.get_ext_fullpath(os.path.basename(target_fname))
         try:
             os.makedirs(os.path.dirname(ext_path))
